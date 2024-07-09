@@ -11,8 +11,9 @@ SCREEN_HEIGHT = 600
 
 # Colors
 BACKGROUND_COLOR = (173, 255, 47)
-BUTTON_COLOR =(173, 255, 47)
-TEXT_COLOR = (0, 0, 0)
+LINE_COLOR = (0, 0, 0)
+X_COLOR = (255, 0, 0)
+O_COLOR = (0, 0, 255)
 
 # Set up the display
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -25,6 +26,23 @@ font = pygame.font.Font(None, 74)
 board = [["", "", ""], ["", "", ""], ["", "", ""]]
 current_player = "X"
 game_over = False
+
+# Function to draw the Tic Tac Toe board
+def draw_tic_tac_toe_board():
+    screen.fill(BACKGROUND_COLOR)
+    pygame.draw.line(screen, LINE_COLOR, (200, 0), (200, 600), 5)
+    pygame.draw.line(screen, LINE_COLOR, (400, 0), (400, 600), 5)
+    pygame.draw.line(screen, LINE_COLOR, (0, 200), (600, 200), 5)
+    pygame.draw.line(screen, LINE_COLOR, (0, 400), (600, 400), 5)
+
+# Function to draw X
+def draw_x(x, y):
+    pygame.draw.line(screen, X_COLOR, (x - 50, y - 50), (x + 50, y + 50), 5)
+    pygame.draw.line(screen, X_COLOR, (x - 50, y + 50), (x + 50, y - 50), 5)
+
+# Function to draw O
+def draw_o(x, y):
+    pygame.draw.circle(screen, O_COLOR, (x, y), 50, 5)
 
 # Function to draw text
 def draw_text(text, font, color, surface, x, y):
@@ -70,15 +88,13 @@ def switch_player():
 
 # Function to draw the game board
 def draw_board():
-    screen.fill(BACKGROUND_COLOR)
-    for x in range(1, 3):
-        pygame.draw.line(screen, TEXT_COLOR, (SCREEN_WIDTH // 3 * x, 0), (SCREEN_WIDTH // 3 * x, SCREEN_HEIGHT), 5)
-        pygame.draw.line(screen, TEXT_COLOR, (0, SCREEN_HEIGHT // 3 * x), (SCREEN_WIDTH, SCREEN_HEIGHT // 3 * x), 5)
-    
+    draw_tic_tac_toe_board()
     for row in range(3):
         for col in range(3):
-            if board[row][col] != "":
-                draw_text(board[row][col], font, TEXT_COLOR, screen, (col * SCREEN_WIDTH // 3) + SCREEN_WIDTH // 6, (row * SCREEN_HEIGHT // 3) + SCREEN_HEIGHT // 6)
+            if board[row][col] == "X":
+                draw_x(col * 200 + 100, row * 200 + 100)
+            elif board[row][col] == "O":
+                draw_o(col * 200 + 100, row * 200 + 100)
 
 # Function to restart the game
 def restart_game():
@@ -116,18 +132,18 @@ def results_screen(winner):
         screen.fill(BACKGROUND_COLOR)
         
         if winner == "Draw":
-            draw_text('It\'s a Draw!!!', font, TEXT_COLOR, screen, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 4)
+            draw_text('It\'s a Draw!!!', font, LINE_COLOR, screen, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 4)
         else:
-            draw_text(f'{winner} is the Winner!!!', font, TEXT_COLOR, screen, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 4)
+            draw_text(f'{winner} is the Winner!!!', font, LINE_COLOR, screen, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 4)
         
         main_menu_button = pygame.Rect(SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2, 200, 50)
         restart_button = pygame.Rect(SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 + 60, 200, 50)
         
-        pygame.draw.rect(screen, BUTTON_COLOR, main_menu_button)
-        pygame.draw.rect(screen, BUTTON_COLOR, restart_button)
+        pygame.draw.rect(screen, BACKGROUND_COLOR, main_menu_button)
+        pygame.draw.rect(screen, BACKGROUND_COLOR, restart_button)
         
-        draw_text('Main Menu', font, TEXT_COLOR, screen, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 25)
-        draw_text('Restart', font, TEXT_COLOR, screen, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 85)
+        draw_text('Main Menu', font, LINE_COLOR, screen, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 25)
+        draw_text('Restart', font, LINE_COLOR, screen, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 85)
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -148,16 +164,16 @@ def pause_menu():
     while paused:
         screen.fill(BACKGROUND_COLOR)
         
-        draw_text('Paused', font, TEXT_COLOR, screen, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 4)
+        draw_text('Paused', font, LINE_COLOR, screen, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 4)
         
         continue_button = pygame.Rect(SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 - 50, 200, 50)
         exit_button = pygame.Rect(SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2, 200, 50)
         
-        pygame.draw.rect(screen, BUTTON_COLOR, continue_button)
-        pygame.draw.rect(screen, BUTTON_COLOR, exit_button)
+        pygame.draw.rect(screen, BACKGROUND_COLOR, continue_button)
+        pygame.draw.rect(screen, BACKGROUND_COLOR, exit_button)
         
-        draw_text('Continue', font, TEXT_COLOR, screen, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 25)
-        draw_text('Exit', font, TEXT_COLOR, screen, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 25)
+        draw_text('Continue', font, LINE_COLOR, screen, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 25)
+        draw_text('Exit', font, LINE_COLOR, screen, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 25)
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -176,16 +192,16 @@ def options_menu():
     while options_running:
         screen.fill(BACKGROUND_COLOR)
         
-        draw_text('Options', font, TEXT_COLOR, screen, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 4)
+        draw_text('Options', font, LINE_COLOR, screen, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 4)
         
         sound_button = pygame.Rect(SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 - 50, 200, 50)
         main_menu_button = pygame.Rect(SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2, 200, 50)
         
-        pygame.draw.rect(screen, BUTTON_COLOR, sound_button)
-        pygame.draw.rect(screen, BUTTON_COLOR, main_menu_button)
+        pygame.draw.rect(screen, BACKGROUND_COLOR, sound_button)
+        pygame.draw.rect(screen, BACKGROUND_COLOR, main_menu_button)
         
-        draw_text('Sound: On/Off', font, TEXT_COLOR, screen, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 25)
-        draw_text('Main Menu', font, TEXT_COLOR, screen, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 25)
+        draw_text('Sound: On/Off', font, LINE_COLOR, screen, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 25)
+        draw_text('Main Menu', font, LINE_COLOR, screen, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 25)
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -206,14 +222,14 @@ def appearance_menu():
     while appearance_running:
         screen.fill(BACKGROUND_COLOR)
         
-        draw_text('Appearance', font, TEXT_COLOR, screen, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 4)
+        draw_text('Appearance', font, LINE_COLOR, screen, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 4)
         
         # Add buttons for appearance options
         main_menu_button = pygame.Rect(SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2, 200, 50)
         
-        pygame.draw.rect(screen, BUTTON_COLOR, main_menu_button)
+        pygame.draw.rect(screen, BACKGROUND_COLOR, main_menu_button)
         
-        draw_text('Main Menu', font, TEXT_COLOR, screen, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 25)
+        draw_text('Main Menu', font, LINE_COLOR, screen, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 25)
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -231,17 +247,17 @@ def game_setup_screen():
     while setup_running:
         screen.fill(BACKGROUND_COLOR)
         
-        draw_text('How many times you want to play:', font, TEXT_COLOR, screen, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 4)
+        draw_text('How many times you want to play:', font, LINE_COLOR, screen, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 4)
         
         # Add input field and buttons for game setup
         start_button = pygame.Rect(SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 - 50, 200, 50)
         back_button = pygame.Rect(SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2, 200, 50)
         
-        pygame.draw.rect(screen, BUTTON_COLOR, start_button)
-        pygame.draw.rect(screen, BUTTON_COLOR, back_button)
+        pygame.draw.rect(screen, BACKGROUND_COLOR, start_button)
+        pygame.draw.rect(screen, BACKGROUND_COLOR, back_button)
         
-        draw_text('Start', font, TEXT_COLOR, screen, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 25)
-        draw_text('Go Back', font, TEXT_COLOR, screen, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 25)
+        draw_text('Start', font, LINE_COLOR, screen, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 25)
+        draw_text('Go Back', font, LINE_COLOR, screen, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 25)
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -263,19 +279,19 @@ def main_menu():
     while menu_running:
         screen.fill(BACKGROUND_COLOR)
         
-        draw_text('Tic Tac Toe', font, TEXT_COLOR, screen, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 4)
+        draw_text('Tic Tac Toe', font, LINE_COLOR, screen, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 4)
         
         play_button = pygame.Rect(SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 - 100, 200, 50)
         options_button = pygame.Rect(SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 - 50, 200, 50)
         appearance_button = pygame.Rect(SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2, 200, 50)
         
-        pygame.draw.rect(screen, BUTTON_COLOR, play_button)
-        pygame.draw.rect(screen, BUTTON_COLOR, options_button)
-        pygame.draw.rect(screen, BUTTON_COLOR, appearance_button)
+        pygame.draw.rect(screen, BACKGROUND_COLOR, play_button)
+        pygame.draw.rect(screen, BACKGROUND_COLOR, options_button)
+        pygame.draw.rect(screen, BACKGROUND_COLOR, appearance_button)
         
-        draw_text('Play', font, TEXT_COLOR, screen, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 75)
-        draw_text('Options', font, TEXT_COLOR, screen, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 25)
-        draw_text('Appearance', font, TEXT_COLOR, screen, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 25)
+        draw_text('Play', font, LINE_COLOR, screen, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 75)
+        draw_text('Options', font, LINE_COLOR, screen, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 25)
+        draw_text('Appearance', font, LINE_COLOR, screen, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 25)
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -293,6 +309,9 @@ def main_menu():
                     appearance_menu()
         
         pygame.display.update()
+
+# Start the main menu
+main_menu()
 
 # Start the main menu
 main_menu()
